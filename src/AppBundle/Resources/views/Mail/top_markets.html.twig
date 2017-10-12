@@ -1,0 +1,26 @@
+{% extends 'AppBundle:Mail:layout.html.twig' %}
+
+{% block title %}
+    
+    Du {{ begin|date('d/m/Y') }} au {{ end|date('H:i') }} !
+   
+{% endblock title %}
+
+{% block content %}
+    
+    <h2>Sur cette période, voici la liste des opportunités d'arbitrage :</h2>
+
+    <p>
+        <ul>
+    {% for k,result in results %}
+        <li>{{ k }}- {{ result['market'] }}: (gain de {{ result['sum']|round(2) }} pour 1000) </li>
+    {% endfor %}
+        </ul>
+    </p>
+
+    <p>
+        Cool non ?
+    </p>
+
+
+{% endblock content %}

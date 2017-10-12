@@ -1,0 +1,18 @@
+services:
+    
+    bittrex_v1.1:
+        class: AppBundle\Platform\Bittrex\v1_1\Bittrex
+        arguments: ['@coinmarketcap_v1', '%platform.bittrex.apikey%','%platform.bittrex.apisecret%']
+
+    kraken_api:
+        class: AppBundle\Platform\Kraken\Kraken
+        arguments: ['@coinmarketcap_v1', '%platform.kraken.apikey%', '%platform.kraken.apisecret%']
+
+    coinmarketcap_v1:
+        class: AppBundle\Platform\CoinMarketCap\v1\CoinMarketCap
+
+    app.mailer:
+        class: AppBundle\Mailer\Mailer
+        arguments: ['@mailer','@templating','%mailer.email.sender%','%mailer.email.admin%']
+        tags:
+            - { name: mailer, alias: mailer }

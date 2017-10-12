@@ -1,0 +1,8 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+#BCCCronManager routing
+BCCCronManagerBundle:
+    resource: "@BCCCronManagerBundle/Resources/config/routing.xml"
+    prefix:   admin/cron-manager

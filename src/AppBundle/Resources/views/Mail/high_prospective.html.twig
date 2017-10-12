@@ -1,0 +1,30 @@
+{% extends 'AppBundle:Mail:layout.html.twig' %}
+
+{% block title %}
+    
+    Le {{ prospect.datetime|date('d/m/Y') }} à {{ prospect.datetime|date('H:i') }} !
+   
+{% endblock title %}
+
+{% block content %}
+    
+    <h2>Une opportunité d'arbitrage a été détecté :</h2>
+
+    <p>
+    Acheter du {{ prospect.market }} sur {{ prospect.buyPlatform }} à {{ prospect.buyPrice|round(3) }}€ et le vendre sur {{ prospect.sellPlatform }} à {{ prospect.sellPrice|round(2) }}€
+    </p>
+
+    <p>
+       {{ prospect.gainPercent }}% de bénéfice probable.
+        Gain pour 1 action: {{ prospect.priceDiff }}
+        Gain pour 1000{{ prospect.fiatbase }}: {{ prospect.gainPer1000 }} 
+        Gain pour 5000{{ prospect.fiatbase }}: {{ prospect.gainPer5000 }} 
+        Gain pour 10000{{ prospect.fiatbase }}: {{ prospect.gainPer10000 }}         
+    </p>
+
+    <p>
+        Cool non ?
+    </p>
+
+
+{% endblock content %}
