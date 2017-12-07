@@ -196,7 +196,7 @@ class ArbitrageScanCommand extends ContainerAwareCommand
                 $output->writeln('');
 
                 $mailer = $container->get('app.mailer');
-                if($p->getGainPercent() >= 3) {
+                if($p->getGainPercent() >= 5) {
                     if($input->getOption('mail') != null) {
                         $mailer->sendHighArbitrageProspective($p);                        
                     }
