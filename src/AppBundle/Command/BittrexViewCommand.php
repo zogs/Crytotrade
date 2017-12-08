@@ -17,7 +17,7 @@ class BittrexViewCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('market:bittrex:view')
+        ->setName('bittrex:balance')
         ->setDescription('')
         //->addArgument('action', InputArgument::REQUIRED, 'Action to perform ? [add|view|remove|remove-all|list|add-defaults]')
         //->addOption('name', null, InputOption::VALUE_REQUIRED, 'Nom de la ville')

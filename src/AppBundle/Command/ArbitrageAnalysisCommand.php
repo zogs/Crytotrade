@@ -17,7 +17,7 @@ class ArbitrageAnalysisCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('market:arbitrage:recap')
+        ->setName('arbitrage:recap')
         ->setDescription('')
         //->addArgument('action', InputArgument::REQUIRED, 'Action to perform ? [add|view|remove|remove-all|list|add-defaults]')
         ->addOption('days', null, InputOption::VALUE_REQUIRED, 'from nb days')

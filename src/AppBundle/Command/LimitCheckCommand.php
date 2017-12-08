@@ -19,7 +19,7 @@ class LimitCheckCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('market:limit:check')
+        ->setName('limit:check')
         ->setDescription('Check high or low limit reached by a token')
         ;
     }

@@ -2,14 +2,14 @@
 
 {% block title %}
     
-    Limite atteinte
+    <h1>Limite atteinte !</h1>
    
 {% endblock title %}
 
 {% block content %}
     
     <p>
-        Le {{ limit.name }} a atteint {{ limit.value }} !!!
+        <strong>{{ limit.name|capitalize }}</strong> a atteint {{ limit.value }} sur son {{ limit.param }} !!!
     </p>
 
 

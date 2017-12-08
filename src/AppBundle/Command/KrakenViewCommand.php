@@ -17,7 +17,7 @@ class KrakenViewCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('market:kraken:view')
+        ->setName('kraken:balance')
         ->setDescription('')
         ;
     }

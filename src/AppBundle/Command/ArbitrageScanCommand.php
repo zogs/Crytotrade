@@ -19,7 +19,7 @@ class ArbitrageScanCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('market:arbitrage:scan')
+        ->setName('arbitrage:scan')
         ->setDescription('')
         //->addArgument('action', InputArgument::REQUIRED, 'Action to perform ? [add|view|remove|remove-all|list|add-defaults]')
         ->addOption('top', null, InputOption::VALUE_REQUIRED, 'nb top market to scan')
