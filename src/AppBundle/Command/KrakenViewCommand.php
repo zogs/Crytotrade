@@ -19,11 +19,6 @@ class KrakenViewCommand extends ContainerAwareCommand
         $this
         ->setName('market:kraken:view')
         ->setDescription('')
-        //->addArgument('action', InputArgument::REQUIRED, 'Action to perform ? [add|view|remove|remove-all|list|add-defaults]')
-        //->addOption('name', null, InputOption::VALUE_REQUIRED, 'Nom de la ville')
-        //->addOption('lat', null, InputOption::VALUE_REQUIRED, 'Lattitude de la ville')
-        //->addOption('lon', null, InputOption::VALUE_REQUIRED, 'Longitude de la ville')
-        //->addOption('id', null, InputOption::VALUE_REQUIRED, 'Id du point')
         ;
     }
 

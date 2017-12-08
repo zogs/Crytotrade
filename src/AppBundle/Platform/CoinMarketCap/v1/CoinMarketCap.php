@@ -18,30 +18,33 @@ class CoinMarketCap {
 
   }
 
+  public function getMarket($name, $fiat = 'USD')
+  {
+    $uri = 'https://api.coinmarketcap.com/v1/ticker/'.$name.'/?convert='.$fiat;
+    $result = $this->apiCall($uri);
+
+    return $result;
+  }
+
   public function getMarkets($limit = 10, $fiat = 'USD')
   {
     $uri = "https://api.coinmarketcap.com/v1/ticker/?limit=".$limit."&convert=".$fiat;
-    $query = $this->apiCall($uri);
+    $result = $this->apiCall($uri);
 
-    return $query;
+    return $result;
   }
 
   public function getFiatPrice($currency, $fiat = 'USD')
   {
     $uri = "https://api.coinmarketcap.com/v1/ticker/".$currency."/?convert=EUR";
-    $query = $this->apiCall($uri);
+    $result = $this->apiCall($uri);
 
-    return $query[0]['price_'.strtolower($fiat)];
+    return $result[0]['price_'.strtolower($fiat)];
   }
 
   public function getBitcoinPrice($fiat = 'USD')
   {
     return $this->getFiatPrice('bitcoin', $fiat);
-  }
-
-  private function truncAddress($add)
-  {
-    return !empty($add)? substr($add, 0, 6).'...'.substr($add, -3) : '-';
   }
 
   private function apiCall($uri) {

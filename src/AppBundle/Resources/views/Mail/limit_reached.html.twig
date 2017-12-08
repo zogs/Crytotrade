@@ -1,0 +1,16 @@
+{% extends 'AppBundle:Mail:layout.html.twig' %}
+
+{% block title %}
+    
+    Limite atteinte
+   
+{% endblock title %}
+
+{% block content %}
+    
+    <p>
+        Le {{ limit.name }} a atteint {{ limit.value }} !!!
+    </p>
+
+
+{% endblock content %}

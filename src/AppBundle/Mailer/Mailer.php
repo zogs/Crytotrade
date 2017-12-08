@@ -32,7 +32,7 @@ class Mailer
             'prospect' => $prospect,
             ));
 
-        return $this->sendMessage($this->expediteur, $this->admins, 'Waou '.$prospect->getGainPercent().'% !!!', $body);
+        return $this->sendMessage($this->expediteur, $this->admins, 'Waou '.$prospect->getMarket().' '.$prospect->getGainPercent().'% !!!', $body);
     }
 
     public function sendTopMarketReport($begin, $end, $results)
@@ -44,6 +44,16 @@ class Mailer
             ));
 
         return $this->sendMessage($this->expediteur, $this->admins, 'Rapport de marché', $body);
+    }
+
+    public function sendLimitReached($limit, $data)
+    {
+        $body = $this->templating->render('AppBundle:Mail:limit_reached.html.twig', array(
+            'limit' => $limit,
+            'data' => $data,
+            ));
+
+        return $this->sendMessage($this->expediteur, $this->admins, 'Limit reached: '.$limit->getName(). '!', $body);
     }
 
     protected function sendMessage($from, $to, $subject, $body)
