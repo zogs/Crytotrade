@@ -35,6 +35,7 @@ class BittrexViewCommand extends ContainerAwareCommand
         $currencies = $bittrex->getCurrencies();
         $table = new Table($output);
         $table->setHeaders(array('Currency', 'Fiat', 'Balance', 'Available', 'Pending', 'Address'));
+        $total = 0;
         foreach ($currencies as $res) {
           $table->addRows(array(
                 array(
@@ -45,9 +46,14 @@ class BittrexViewCommand extends ContainerAwareCommand
                     $res['pending'],
                     $res['short_address'],                      
                 ),
-            ));      
+            ));  
+            $total += $res['total'];
+
         }
-        $table->setStyle('compact');
+        $table->addRow(new TableSeparator());
+        $table->addRow(array('TOTAL', $total.' €', '', '', '', ''));
+
+        
         $table->render();
         
 
