@@ -53,7 +53,12 @@ class Mailer
             'data' => $data,
             ));
 
-        return $this->sendMessage($this->expediteur, $this->admins, 'Limit reached: '.$limit->getName(). '!', $body);
+        $title = $limit->getName();
+        $title .= ($limit->getEqual()=='greater')? ' above ' : ' under ';
+        $title .= $limit->getValue();
+        $title .= ' !!';
+
+        return $this->sendMessage($this->expediteur, $this->admins, $title, $body);
     }
 
     protected function sendMessage($from, $to, $subject, $body)

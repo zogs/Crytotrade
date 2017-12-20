@@ -9,7 +9,10 @@
 {% block content %}
     
     <p>
-        <strong>{{ limit.name|capitalize }}</strong> a atteint {{ limit.value }} sur son {{ limit.param }} !!!
+        <strong>{{ limit.name|capitalize }}</strong> 
+        {% if limit.equal == 'greater' %}a dépassé {% else %} est descendu sous {% endif %}
+        la limite de {{ limit.value }} ...
+        <br>Le cours est actuellement à {{ data[limit.param] }} sur le {{ limit.param }} !        
     </p>
 
 
