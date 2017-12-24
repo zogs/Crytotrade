@@ -54,8 +54,12 @@ class McAfeePumpCommand extends ContainerAwareCommand
         $tweets = json_decode($json);
         $tweet = $tweets[0];
         
+        $dir = __DIR__.'/../../../var/logs';
+        $filename = 'mcafee_id.txt';
+        $file = $dir.'/'.$filename;
+        
         //compare with saved tweet
-        $saved = (file_exists("var/logs/mcafee_id.txt") === true)? file_get_contents("var/logs/mcafee_id.txt") : null;
+        $saved = (file_exists($file) === true)? file_get_contents($file) : null;
 
         if($saved != $tweet->id) {
 
@@ -65,7 +69,7 @@ class McAfeePumpCommand extends ContainerAwareCommand
             
             //save last tweet id
             $content = $tweet->id;
-            $fp = fopen("var/logs/mcafee_id.txt","wb");
+            $fp = fopen($file,"wb");
             fwrite($fp,$content);
             fclose($fp);
         } else {
