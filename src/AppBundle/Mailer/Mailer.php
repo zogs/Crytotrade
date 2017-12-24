@@ -61,6 +61,15 @@ class Mailer
         return $this->sendMessage($this->expediteur, $this->admins, $title, $body);
     }
 
+    public function sendMcAfeeAlert($tweet)
+    {
+        $body = $this->templating->render('AppBundle:Mail:mcAfee.html.twig', array(
+            'tweet' => $tweet,
+            ));
+
+        return $this->sendMessage($this->expediteur, $this->admins, "New mcAfee alert !", $body);
+    }
+
     protected function sendMessage($from, $to, $subject, $body)
     {
         $mail = \Swift_Message::newInstance();
