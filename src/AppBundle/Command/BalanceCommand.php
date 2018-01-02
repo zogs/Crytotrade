@@ -63,7 +63,7 @@ class BalanceCommand extends ContainerAwareCommand
         }
 
         $table->addRow(new TableSeparator());
-        $table->addRow(array('TOTAL', $total.' €', '', '', '', ''));
+        $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));
       
         $table->render();
         
