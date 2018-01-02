@@ -117,7 +117,7 @@ class Coin
      */
     public function getAmountEur()
     {
-        return round($this->amount_eur,2);
+        return $this->amount_eur;
     }
 
     /**

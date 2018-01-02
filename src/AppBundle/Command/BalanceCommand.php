@@ -39,7 +39,7 @@ class BalanceCommand extends ContainerAwareCommand
         if($param == 'all' || $param == 'wallet') $platforms['wallet'] = $walletManager->getAll();
 
         $table = new Table($output);
-        $table->setHeaders(array('Coin', 'Amount', 'Balance', 'Location', '24h change', '7d change', 'Coin'));
+        $table->setHeaders(array('Coin', 'Amount', 'Balance', 'Location', '24h', '7d', 'Coin'));
         $total = 0;
 
         foreach ($platforms as $platform => $coins) {
@@ -49,9 +49,9 @@ class BalanceCommand extends ContainerAwareCommand
                 $table->addRows(array(
                     array(
                         $coin->getName(),
-                        $coin->getAmountEur().' €',
-                        $coin->getAmount(),
-                        $coin->getLocation(),
+                        round($coin->getAmountEur()).' €',
+                        round($coin->getAmount(),4),
+                        ucfirst($coin->getLocation()),
                         ($coin->getPercentChange24h() > 0 ? '<info>+'.$coin->getPercentChange24h().'</info>' : '<comment>'.$coin->getPercentChange24h().'</comment>'),
                         ($coin->getPercentChange7d() > 0 ? '<info>+'.$coin->getPercentChange7d().'</info>' : '<comment>'.$coin->getPercentChange7d().'</comment>'),
                         $coin->getName()
