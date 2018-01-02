@@ -5,7 +5,7 @@ namespace AppBundle\Platform\Kraken;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+use AppBundle\Manager\CoinManager;
 use AppBundle\Platform\CoinMarketCap\v1\CoinMarketCap;
 use AppBundle\Platform\Kraken\KrakenAPIClient;
 
@@ -15,21 +15,58 @@ class Kraken {
   private $apikey;
   private $apisecret;
   
-  public function __construct(CoinMarketCap $coinMarketCap, $apikey, $apisecret)
+  public function __construct(CoinMarketCap $coinmarketcap, CoinManager $coins, $apikey, $apisecret)
   {
-    $this->apikey = $apikey;
-    $this->apisecret = $apisecret;
+    $this->coin_manager = $coins;
+    $this->coinmarketcap = $coinmarketcap;
 
-    $this->baseFiatCurrency = 'EUR';
-    $this->bitcoinFiatPrice = $coinMarketCap->getFiatPrice('bitcoin',$this->baseFiatCurrency);
+    $this->baseFiat = 'EUR';
+    $this->bitcoinFiatPrice = $coinmarketcap->getFiatPrice('bitcoin',$this->baseFiat);
 
     //instanciate kraken client
     $beta = false; 
     $url = $beta ? 'https://api.beta.kraken.com' : 'https://api.kraken.com';
     $sslverify = $beta ? false : true;
     $version = 0;
-    $this->api = new KrakenAPI($this->apikey, $this->apisecret, $url, $version, $sslverify);
+    $this->api = new KrakenAPI($apikey, $apisecret, $url, $version, $sslverify);
 
+    $this->nameAdapters = array(
+      'XETH' => 'Ethereum',
+      //... add here 
+    );
+
+  }
+
+  public function getBalances()
+  {
+    $balances = $this->getApiBalances();
+
+    foreach ($balances['result'] as $name => $amount) {
+      
+      // convert name to findable name
+      $name = $this->findAdaptedName($name);
+
+      //skip null amount
+      if($amount==0) continue;
+      if($name==null) continue;
+
+      //coinmarketcap
+      $market = $this->coinmarketcap->getMarket($name, $this->baseFiat);
+      
+      //build coin
+      $coin = $this->coin_manager->buildCoin($market, $amount, 'kraken');
+      
+      //add coin
+      $res[] = $coin;
+    }
+
+    return $res;
+  }
+
+  private function findAdaptedName($name)
+  {
+    if(isset($this->nameAdapters[$name])) return $this->nameAdapters[$name];
+    return null;
   }
 
   public function getTicker($market)
@@ -72,13 +109,13 @@ class Kraken {
   }
 
   //Query private asset balance
-  public function getBalances()
+  public function getApiBalances()
   {
     return $this->api->QueryPrivate('Balance');
   }
 
   // Query private open orders and included related trades
-  public function getOrders()
+  public function getApiOrders()
   {
     return $this->api->QueryPrivate('OpenOrders', array('trades' => true));    
   }

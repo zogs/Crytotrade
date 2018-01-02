@@ -20,10 +20,11 @@ class CoinMarketCap {
 
   public function getMarket($name, $fiat = 'USD')
   {
+    $name = $this->formatMarketName($name);
     $uri = 'https://api.coinmarketcap.com/v1/ticker/'.$name.'/?convert='.$fiat;
     $result = $this->apiCall($uri);
 
-    return $result;
+    return $result[0];
   }
 
   public function getMarkets($limit = 10, $fiat = 'USD')
@@ -53,7 +54,13 @@ class CoinMarketCap {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $execResult = curl_exec($ch);
         $query = json_decode($execResult, true);
-        if(isset($query['error'])) return $this->output->writeln("<error>La requête n'a pu aboutir... [".$uri."]</error>");
+        if(isset($query['error'])) throw new \Exception("La requête CoinMarketCap n'a pu aboutir... [".$uri."]");
         return $query;
+  }
+  
+  private function formatMarketName($name)
+  {
+    $formatted = str_replace(' ', '-', strtolower($name));
+    return $formatted;
   }
 }

@@ -6,6 +6,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
+use AppBundle\Entity\Coin;
+use AppBundle\Manager\CoinManager;
 use AppBundle\Platform\CoinMarketCap\v1\CoinMarketCap;
 
 class Bittrex {
@@ -14,30 +16,47 @@ class Bittrex {
   private $apikey;
   private $apisecret;
   
-  public function __construct(CoinMarketCap $coinMarketCap, $apikey, $apisecret)
+  public function __construct(CoinMarketCap $coinmarketcap, CoinManager $coins, $apikey, $apisecret)
   {
     $this->apikey = $apikey;
     $this->apisecret = $apisecret;
+    $this->coin_manager = $coins;
+    $this->coinmarketcap = $coinmarketcap;
 
-    $this->baseFiatCurrency = 'EUR';
-    $this->bitcoinFiatPrice = $coinMarketCap->getFiatPrice('bitcoin',$this->baseFiatCurrency);
+    $this->baseFiat = 'EUR';
+    $this->bitcoinFiatPrice = $coinmarketcap->getFiatPrice('bitcoin',$this->baseFiat);
+
+    $this->availableMarkets = $this->getApiMarkets();
+
+    $this->marketNameAdapter = array(
+      'PowerLedger' => 'Power Ledger',
+      //... add here
+    );
+
   }
 
-  public function getCurrencies()
+  public function getBalances()
   {
     $currencies = $this->getApiBalances();
     
     foreach ($currencies as $key => $curr) {
+
+      //bittrex
+      $amount = $curr['Balance'];
+      $name = $curr['Currency'];
+      $market = $this->findAvailableMarketName($name);
+
+      //skip null amount
+      if($amount==0) continue;
+
+      //coinmarketcap
+      $market = $this->coinmarketcap->getMarket($market, $this->baseFiat);
       
-      $res[$curr['Currency']] = array(
-        'name' => $curr['Currency'],
-        'total' => ($curr['Currency'] == 'BTC')? $curr['Balance']*$this->bitcoinFiatPrice : $this->getFiatEquivalence($curr['Currency']) * $curr['Balance'],
-        'balance' => $curr['Balance'],
-        'available' => $curr['Available'],
-        'pending' => $curr['Pending'],
-        'address' => $curr['CryptoAddress'],
-        'short_address' => $this->truncAddress($curr['CryptoAddress'])
-      );
+      //build coin
+      $coin = $this->coin_manager->buildCoin($market, $amount, 'bittrex');
+      
+      //add coin
+      $res[] = $coin;
     }
 
     return $res;
@@ -124,5 +143,27 @@ class Bittrex {
         $query = json_decode($execResult, true);
         if($query['success'] === false || !isset($query['success'])) throw new \Exception("La requête n'a pu aboutir... [$uri]");
         return $query;
+  }
+
+  private function findAvailableMarket($symbol) 
+  {
+    foreach ($this->availableMarkets as $market) {
+      if($market['MarketCurrency'] == $symbol) return $market;
+    }
+    return false;
+  }
+
+  private function findAvailableMarketName($symbol)
+  {
+    $market = $this->findAvailableMarket($symbol);
+    $name = $market['MarketCurrencyLong'];
+
+    // search for name adaptation and if needed return it
+    foreach ($this->marketNameAdapter as $key => $value) {
+      if($key == $name) return $value;
+    }
+
+    //return default name
+    return $name;
   }
 }
