@@ -1,0 +1,22 @@
+{% extends 'AppBundle:Mail:layout.html.twig' %}
+
+{% block title %}
+    
+    <h1>Nouveau tweet de John !</h1>
+   
+{% endblock title %}
+
+{% block content %}
+    
+    <p><<<br>
+        {{ tweet.text }}     
+        <br>
+        >> 
+    </p>
+
+    <p>
+    	Envoyé le : {{ tweet.created_at }}
+    </p>
+
+
+{% endblock content %}
