@@ -42,29 +42,39 @@ class BalanceCommand extends ContainerAwareCommand
         $table->setHeaders(array('Coin', 'Amount', 'Balance', 'Location', '24h', '7d', 'Coin'));
         $total = 0;
 
-        foreach ($platforms as $platform => $coins) {
-            
-            foreach ($coins as $coin) {
-                
-                $table->addRows(array(
-                    array(
-                        $coin->getName(),
-                        round($coin->getAmountEur()).' €',
-                        round($coin->getAmount(),4),
-                        ucfirst($coin->getLocation()),
-                        ($coin->getPercentChange24h() > 0 ? '<info>+'.$coin->getPercentChange24h().'</info>' : '<comment>'.$coin->getPercentChange24h().'</comment>'),
-                        ($coin->getPercentChange7d() > 0 ? '<info>+'.$coin->getPercentChange7d().'</info>' : '<comment>'.$coin->getPercentChange7d().'</comment>'),
-                        $coin->getName()
-                    )
-                ));
-
-                $total += $coin->getAmountEur();
+        // aggregate coins
+        foreach ($platforms as $platform => $_coins) {
+            foreach ($_coins as $coin) {
+                $coins[] = $coin;
             }
+        }    
+
+        // order coins
+        usort($coins, function ($a, $b) {
+            return $b->getAmountEur() - $a->getAmountEur();
+        });
+
+        // add coins to table
+        foreach ($coins as $coin) {
+                
+            $table->addRows(array(
+                array(
+                    $coin->getName(),
+                    round($coin->getAmountEur()).' €',
+                    round($coin->getAmount(),4),
+                    ucfirst($coin->getLocation()),
+                    ($coin->getPercentChange24h() > 0 ? '<info>+'.$coin->getPercentChange24h().'</info>' : '<comment>'.$coin->getPercentChange24h().'</comment>'),
+                    ($coin->getPercentChange7d() > 0 ? '<info>+'.$coin->getPercentChange7d().'</info>' : '<comment>'.$coin->getPercentChange7d().'</comment>'),
+                    $coin->getName()
+                )
+            ));
+
+            $total += $coin->getAmountEur();
         }
 
+        // display table
         $table->addRow(new TableSeparator());
-        $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));
-      
+        $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));      
         $table->render();
         
 
