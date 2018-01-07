@@ -42,7 +42,6 @@ class LimitCheckCommand extends ContainerAwareCommand
                 $this->output->writeln("<info>Checking ".$limit->getName()." limit...</info>");
                
                $data = $coinmarket->getMarket($limit->getName());
-               $data = $data[0];
                $param = $limit->getParam();
 
                if(isset($data[$param])) {
@@ -80,8 +79,7 @@ class LimitCheckCommand extends ContainerAwareCommand
             $this->output->writeln('<error>'.$e->getMessage().' </error>');
             dump($limit);
             dump($data);       
-        }
-        
+        }        
     }
 
     private function limitReached(LimitCheck $limit, $data)
