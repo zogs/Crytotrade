@@ -32,11 +32,30 @@ class BalanceCommand extends ContainerAwareCommand
         $bittrex = $this->getContainer()->get('bittrex_v1.1');
         $kraken = $this->getContainer()->get('kraken_api');   
 
-        // get coins
+        // get wanted platform
         $param = $input->getArgument('platform');
-        if($param == 'all' || $param == 'bittrex') $platforms['bittrex'] = $bittrex->getBalances();
-        if($param == 'all' || $param == 'kraken') $platforms['kraken'] = $kraken->getBalances();
-        if($param == 'all' || $param == 'wallet') $platforms['wallet'] = $walletManager->getAll();
+        // get coins via API
+        if($param == 'all' || $param == 'bittrex') {
+            try{
+               $platforms['bittrex'] = $bittrex->getBalances();
+            } catch(\Exception $e){
+                $errors[] = "Bittrex API not reachable...";
+            }
+        }
+        if($param == 'all' || $param == 'kraken') {
+            try{
+                $platforms['kraken'] = $kraken->getBalances();
+            } catch(\Exception $e){
+                $errors[] = "Kraken API not reachable...";
+            }
+        }
+        if($param == 'all' || $param == 'wallet') {
+            try{
+                $platforms['wallet'] = $walletManager->getAll();
+            } catch(\Exception $e){
+                $errors[] = "Wallet API not reachable...";
+            }
+        }
 
         $table = new Table($output);
         $table->setHeaders(array('Coin', 'Amount', 'Balance', 'Location', '24h', '7d', 'Coin'));
@@ -77,6 +96,10 @@ class BalanceCommand extends ContainerAwareCommand
         $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));      
         $table->render();
         
+        // display errors
+        foreach ($errors as $error) {
+            $output->writeln("<comment>$error</comment>");
+        }
 
     }
 
