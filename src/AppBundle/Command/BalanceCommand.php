@@ -27,6 +27,7 @@ class BalanceCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
+        $errors = array();
 
         $walletManager = $container->get('wallet_manager');
         $bittrex = $this->getContainer()->get('bittrex_v1.1');
@@ -39,21 +40,21 @@ class BalanceCommand extends ContainerAwareCommand
             try{
                $platforms['bittrex'] = $bittrex->getBalances();
             } catch(\Exception $e){
-                $errors[] = "Bittrex API not reachable...";
+                $errors[] = "Bittrex API not reachable... (".$e->getMessage().")";
             }
         }
         if($param == 'all' || $param == 'kraken') {
             try{
                 $platforms['kraken'] = $kraken->getBalances();
             } catch(\Exception $e){
-                $errors[] = "Kraken API not reachable...";
+                $errors[] = "Kraken API not reachable... (".$e->getMessage().")";
             }
         }
         if($param == 'all' || $param == 'wallet') {
             try{
                 $platforms['wallet'] = $walletManager->getAll();
             } catch(\Exception $e){
-                $errors[] = "Wallet API not reachable...";
+                $errors[] = "Wallet API not reachable... (".$e->getMessage().")";
             }
         }
 
