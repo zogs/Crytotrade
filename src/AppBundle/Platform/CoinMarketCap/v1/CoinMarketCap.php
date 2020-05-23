@@ -12,7 +12,7 @@ class CoinMarketCap {
   private $version = '1';
   //private $apikey = '';
   //private $apisecret = '';
-  
+
   public function __construct()
   {
 
@@ -21,6 +21,7 @@ class CoinMarketCap {
   public function getMarket($name, $fiat = 'USD')
   {
     $name = $this->formatMarketName($name);
+    $name = str_replace('-(abc)', '', $name);
     $uri = 'https://api.coinmarketcap.com/v1/ticker/'.$name.'/?convert='.$fiat;
     $result = $this->apiCall($uri);
 
@@ -57,7 +58,7 @@ class CoinMarketCap {
         if(isset($query['error'])) throw new \Exception("La requête CoinMarketCap n'a pu aboutir... [".$uri."]");
         return $query;
   }
-  
+
   private function formatMarketName($name)
   {
     $formatted = str_replace(' ', '-', strtolower($name));

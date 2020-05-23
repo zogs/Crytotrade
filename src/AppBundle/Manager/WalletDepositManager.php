@@ -3,12 +3,12 @@
 namespace AppBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
-use AppBundle\Platform\CoinMarketCap\v1\CoinMarketCap;
+use AppBundle\Platform\CoinPaprika\v1\CoinPaprika;
 use AppBundle\Entity\Coin;
 
-class WalletDepositManager 
+class WalletDepositManager
 {
-  public function __construct(EntityManager $em, CoinMarketCap $api, CoinManager $coins) {
+  public function __construct(EntityManager $em, CoinPaprika $api, CoinManager $coins) {
 
     $this->em = $em;
     $this->api = $api;
@@ -25,19 +25,30 @@ class WalletDepositManager
 
     $coins = [];
     foreach ($deposits as $deposit) {
-      
-      $market = $this->api->getMarket(
-        $deposit->getFullname(),
-        $this->baseFiat
-      );
 
-      $coin = $this->coins->buildCoin(
-        $market, 
-        $deposit->getAmount(), 
-        $deposit->getWallet()
-      );
+      $coin = $deposit->getFullname();
+      $amount = $deposit->getAmount();
+      $wallet = $deposit->getWallet();
+
+      $to_btc = $this->api->getMarket($coin, 'BTC');
+      $to_eur = $this->api->getMarket($coin, $this->baseFiat);
+
+      $coin = new Coin();
+      $coin->setName($to_eur['symbol']);
+      $coin->setFullname($to_eur['name']);
+      $coin->setAmount($amount);
+      $coin->setAmountEur($amount * $to_eur['price']);
+      $coin->setLocation($wallet);
+      $coin->setPriceBtc($to_btc['price']);
+      $coin->setPriceEur($to_eur['price']);
+      $coin->setVolumeEur24h($to_eur['volume_24h']);
+      $coin->setPercentChange1h($to_eur['percent_change_1h']);
+      $coin->setPercentChange24h($to_eur['percent_change_24h']);
+      $coin->setPercentChange7d($to_eur['percent_change_7d']);
 
       $coins[] = $coin;
+
+      sleep(1);
     }
 
     return $coins;
