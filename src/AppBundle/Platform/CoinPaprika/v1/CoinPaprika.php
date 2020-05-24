@@ -24,7 +24,7 @@ class CoinPaprika {
     if($name == 'komodo') return 'kmd-komodo';
     if($name == 'wax') return 'wax-wax';
     if($name == 'flixxo') return 'flixx-flixxo';
-    if($name == 'eth') return 'eth-ethereum';
+    if($name == 'ethereum') return 'eth-ethereum';
     if($name == 'ads') return 'ads-adshares';
     if($name == 'hoqu') return 'hqx-hoqu';
     if($name == 'pirate-chain') return 'arrr-pirate';
