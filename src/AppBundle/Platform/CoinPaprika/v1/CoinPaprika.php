@@ -59,10 +59,13 @@ class CoinPaprika {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_URL,$uri);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $execResult = curl_exec($ch);
+        if (curl_errno($ch)) { print curl_error($ch); }
         $query = json_decode($execResult, true);
-        curl_close($ch);
         if(isset($query['error'])) throw new \Exception("La requête CoinPaprika n'a pu aboutir... [".$uri."]");
+        curl_close($ch);
         return $query;
   }
 
