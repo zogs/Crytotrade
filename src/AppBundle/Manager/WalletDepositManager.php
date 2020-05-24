@@ -33,7 +33,7 @@ class WalletDepositManager
       try {
         $to_btc = $this->api->getMarket($name, 'BTC');
         $to_eur = $this->api->getMarket($name, $this->baseFiat);
-      } catch($e) {
+      } catch(\Exception $e) {
         throw $e;
       }
 

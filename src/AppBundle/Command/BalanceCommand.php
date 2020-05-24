@@ -71,38 +71,37 @@ class BalanceCommand extends ContainerAwareCommand
             }
         }
 
-        if(empty($coins)) {
-            $output->writeln("<error>No coins to show...");
-            return;
+        if(!empty($coins)) {
+
+            // order coins
+            usort($coins, function ($a, $b) {
+                return $b->getAmountEur() - $a->getAmountEur();
+            });
+
+            // add coins to table
+            foreach ($coins as $coin) {
+
+                $table->addRows(array(
+                    array(
+                        $coin->getName(),
+                        round($coin->getAmountEur()).' €',
+                        round($coin->getAmount(),4),
+                        ucfirst($coin->getLocation()),
+                        ($coin->getPercentChange24h() > 0 ? '<info>+'.$coin->getPercentChange24h().'</info>' : '<comment>'.$coin->getPercentChange24h().'</comment>'),
+                        ($coin->getPercentChange7d() > 0 ? '<info>+'.$coin->getPercentChange7d().'</info>' : '<comment>'.$coin->getPercentChange7d().'</comment>'),
+                        $coin->getName()
+                    )
+                ));
+
+                $total += $coin->getAmountEur();
+            }
+
+            // display table
+            $table->addRow(new TableSeparator());
+            $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));
+            $table->render();
+
         }
-
-        // order coins
-        usort($coins, function ($a, $b) {
-            return $b->getAmountEur() - $a->getAmountEur();
-        });
-
-        // add coins to table
-        foreach ($coins as $coin) {
-
-            $table->addRows(array(
-                array(
-                    $coin->getName(),
-                    round($coin->getAmountEur()).' €',
-                    round($coin->getAmount(),4),
-                    ucfirst($coin->getLocation()),
-                    ($coin->getPercentChange24h() > 0 ? '<info>+'.$coin->getPercentChange24h().'</info>' : '<comment>'.$coin->getPercentChange24h().'</comment>'),
-                    ($coin->getPercentChange7d() > 0 ? '<info>+'.$coin->getPercentChange7d().'</info>' : '<comment>'.$coin->getPercentChange7d().'</comment>'),
-                    $coin->getName()
-                )
-            ));
-
-            $total += $coin->getAmountEur();
-        }
-
-        // display table
-        $table->addRow(new TableSeparator());
-        $table->addRow(array('TOTAL', round($total).' €', '', '', '', ''));
-        $table->render();
 
         // display errors
         foreach ($errors as $error) {
