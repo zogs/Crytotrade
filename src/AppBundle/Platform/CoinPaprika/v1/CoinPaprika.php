@@ -22,13 +22,19 @@ class CoinPaprika {
     $name = strtolower($name);
     if($name == 'bitcoin') return 'btc-bitcoin';
     if($name == 'komodo') return 'kmd-komodo';
+    if($name == 'wax') return 'wax-wax';
+    if($name == 'flixxo') return 'flixx-flixxo';
+    if($name == 'eth') return 'eth-ethereum';
+    if($name == 'ads') return 'ads-adshares';
+    if($name == 'hoqu') return 'hqx-hoqu';
+    if($name == 'pirate-chain') return 'arrr-pirate';
     return $name;
   }
 
   public function getMarket($coin, $fiat = 'USD')
   {
-    $coin = $this->nameAdapter($coin);
-    $uri = 'https://api.coinpaprika.com/v1/tickers/'.$coin.'/?quotes='.$fiat;
+    $name = $this->nameAdapter($coin);
+    $uri = 'https://api.coinpaprika.com/v1/tickers/'.$name.'/?quotes='.$fiat;
     $result = $this->apiCall($uri);
 
     return $result[0];
