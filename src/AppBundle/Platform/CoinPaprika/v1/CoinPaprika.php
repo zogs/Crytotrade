@@ -56,10 +56,12 @@ class CoinPaprika {
 
   private function apiCall($uri) {
         $nonce=time();
-        $ch = curl_init($uri);
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_URL,$uri);
         $execResult = curl_exec($ch);
         $query = json_decode($execResult, true);
+        curl_close($ch);
         if(isset($query['error'])) throw new \Exception("La requête CoinPaprika n'a pu aboutir... [".$uri."]");
         return $query;
   }
