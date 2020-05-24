@@ -41,14 +41,14 @@ class WalletDepositManager
       $coin->setName($to_eur['symbol']);
       $coin->setFullname($to_eur['name']);
       $coin->setAmount($amount);
-      $coin->setAmountEur($amount * $to_eur['price']);
+      $coin->setAmountEur($amount * $to_eur['quotes']['price']);
       $coin->setLocation($wallet);
-      $coin->setPriceBtc($to_btc['price']);
-      $coin->setPriceEur($to_eur['price']);
-      $coin->setVolumeEur24h($to_eur['volume_24h']);
-      $coin->setPercentChange1h($to_eur['percent_change_1h']);
-      $coin->setPercentChange24h($to_eur['percent_change_24h']);
-      $coin->setPercentChange7d($to_eur['percent_change_7d']);
+      $coin->setPriceBtc($to_btc['quotes']['price']);
+      $coin->setPriceEur($to_eur['quotes']['price']);
+      $coin->setVolumeEur24h($to_eur['quotes']['volume_24h']);
+      $coin->setPercentChange1h($to_eur['quotes']['percent_change_1h']);
+      $coin->setPercentChange24h($to_eur['quotes']['percent_change_24h']);
+      $coin->setPercentChange7d($to_eur['quotes']['percent_change_7d']);
 
       $coins[] = $coin;
 

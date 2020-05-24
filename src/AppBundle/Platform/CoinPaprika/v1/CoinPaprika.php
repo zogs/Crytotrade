@@ -37,7 +37,7 @@ class CoinPaprika {
     $uri = 'https://api.coinpaprika.com/v1/tickers/'.$name.'/?quotes='.$fiat;
     $result = $this->apiCall($uri);
 
-    return $result[0];
+    return $result;
   }
 
   public function getFiatPrice($coin, $fiat = 'USD')
