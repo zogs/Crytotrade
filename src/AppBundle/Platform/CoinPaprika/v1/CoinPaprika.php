@@ -58,8 +58,10 @@ class CoinPaprika {
         $nonce=time();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_URL,$uri);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("content-type"=>"application/json"));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $execResult = curl_exec($ch);
         if (curl_errno($ch)) { print curl_error($ch); }
