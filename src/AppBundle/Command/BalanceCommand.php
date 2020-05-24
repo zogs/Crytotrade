@@ -71,6 +71,11 @@ class BalanceCommand extends ContainerAwareCommand
             }
         }
 
+        if(empty($coins)) {
+            $output->writeln("<error>No coins to show...");
+            return;
+        }
+
         // order coins
         usort($coins, function ($a, $b) {
             return $b->getAmountEur() - $a->getAmountEur();

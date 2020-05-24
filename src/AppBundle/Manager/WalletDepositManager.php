@@ -26,12 +26,16 @@ class WalletDepositManager
     $coins = [];
     foreach ($deposits as $deposit) {
 
-      $coin = $deposit->getFullname();
+      $name = $deposit->getFullname();
       $amount = $deposit->getAmount();
       $wallet = $deposit->getWallet();
 
-      $to_btc = $this->api->getMarket($coin, 'BTC');
-      $to_eur = $this->api->getMarket($coin, $this->baseFiat);
+      try {
+        $to_btc = $this->api->getMarket($name, 'BTC');
+        $to_eur = $this->api->getMarket($name, $this->baseFiat);
+      } catch($e) {
+        throw $e;
+      }
 
       $coin = new Coin();
       $coin->setName($to_eur['symbol']);
