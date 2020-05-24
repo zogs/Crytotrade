@@ -28,10 +28,11 @@ class BalanceCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
         $errors = array();
+        $platforms = array();
 
         $walletManager = $container->get('wallet_manager');
-        $bittrex = $this->getContainer()->get('bittrex_v1.1');
-        $kraken = $this->getContainer()->get('kraken_api');
+        //$bittrex = $this->getContainer()->get('bittrex_v1.1');
+        //$kraken = $this->getContainer()->get('kraken_api');
 
         // get wanted platform
         $param = $input->getArgument('platform');

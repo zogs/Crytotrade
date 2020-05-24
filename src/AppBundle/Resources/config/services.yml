@@ -1,5 +1,5 @@
 services:
-    
+
     bittrex_v1.1:
         class: AppBundle\Platform\Bittrex\v1_1\Bittrex
         arguments: ['@coinmarketcap_v1', '@coin_manager', '%platform.bittrex.apikey%','%platform.bittrex.apisecret%']
@@ -11,12 +11,15 @@ services:
     coinmarketcap_v1:
         class: AppBundle\Platform\CoinMarketCap\v1\CoinMarketCap
 
+    coinpaprika:
+        class: AppBundle\Platform\CoinPaprika\v1\CoinPaprika
+
     coin_manager:
         class: AppBundle\Manager\CoinManager
 
     wallet_manager:
         class: AppBundle\Manager\WalletDepositManager
-        arguments: ['@doctrine.orm.entity_manager', '@coinmarketcap_v1', '@coin_manager']
+        arguments: ['@doctrine.orm.entity_manager', '@coinpaprika', '@coin_manager']
 
     app.mailer:
         class: AppBundle\Mailer\Mailer

@@ -27,7 +27,7 @@ class CoinPaprika {
 
   public function getMarket($coin, $fiat = 'USD')
   {
-    $coin = $this->coinAdapter($coin);
+    $coin = $this->nameAdapter($coin);
     $uri = 'https://api.coinpaprika.com/v1/tickers/'.$coin.'/?quotes='.$fiat;
     $result = $this->apiCall($uri);
 
