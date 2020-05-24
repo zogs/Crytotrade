@@ -46,7 +46,7 @@ class CoinPaprika {
     $uri = "https://api.coinpaprika.com/v1/tickers/".$coin."/?quotes=".$fiat;
     $result = $this->apiCall($uri);
 
-    return $result['quotes']['price'];
+    return $result['quotes']['EUR']['price'];
   }
 
   public function getBitcoinPrice($fiat = 'USD')
@@ -60,6 +60,7 @@ class CoinPaprika {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_URL,$uri);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("content-type"=>"application/json"));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
